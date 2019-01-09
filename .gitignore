@@ -1,3 +1,4 @@
 truffle.js
 /node_modules
 /.idea
+/build/contracts/
