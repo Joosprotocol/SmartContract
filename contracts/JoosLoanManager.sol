@@ -49,14 +49,16 @@ contract JoosLoanManager is Ownable {
         uint8 currency_type,
         uint period,
         uint percent,
-        uint8 init_type
+        uint8 init_type,
+        uint created_at
     ) {
         return (
         loans[_id].amount,
         loans[_id].currency_type,
         loans[_id].period,
         loans[_id].percent,
-        loans[_id].init_type
+        loans[_id].init_type,
+        loans[_id].created_at
         );
     }
 

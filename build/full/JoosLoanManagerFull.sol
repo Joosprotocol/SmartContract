@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-// File: ../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol
+// File: node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol
 
 /**
  * @title Ownable
@@ -76,7 +76,7 @@ contract Ownable {
   }
 }
 
-// File: ../contracts/JoosLoanManager.sol
+// File: contracts/JoosLoanManager.sol
 
 contract JoosLoanManager is Ownable {
 
@@ -125,14 +125,16 @@ contract JoosLoanManager is Ownable {
         uint8 currency_type,
         uint period,
         uint percent,
-        uint8 init_type
+        uint8 init_type,
+        uint created_at
     ) {
         return (
         loans[_id].amount,
         loans[_id].currency_type,
         loans[_id].period,
         loans[_id].percent,
-        loans[_id].init_type
+        loans[_id].init_type,
+        loans[_id].created_at
         );
     }
 
