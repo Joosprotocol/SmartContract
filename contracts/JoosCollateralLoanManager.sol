@@ -1,8 +1,11 @@
 pragma solidity ^0.5.1;
 
 import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
+
 
 contract JoosCollateralLoanManager is Ownable {
+    using SafeMath for uint256;
 
     constructor(address _newOwner) public {
         transferOwnership(_newOwner);
@@ -144,6 +147,7 @@ contract JoosCollateralLoanManager is Ownable {
     }
 
     function getStatus(bytes16 _hash_id) public view returns(uint8) {
+        require(isFull(_hash_id), 'Loan does not exist');
         if (loans[_hash_id].is_withdrawn == true) {
             return STATUS_WITHDRAWN;
         }
@@ -248,7 +252,7 @@ contract JoosCollateralLoanManager is Ownable {
     }
 
     function isOverdue(bytes16 _hash_id) public view returns(bool) {
-        return (block.timestamp > loans[_hash_id].created_at + loans[_hash_id].period);
+        return (block.timestamp > loans[_hash_id].created_at.add(loans[_hash_id].period));
     }
 
     function getPaymentsCount(bytes16 _hash_id) public view returns (uint) {
@@ -258,7 +262,7 @@ contract JoosCollateralLoanManager is Ownable {
     function getPaymentsTotalAmount(bytes16 _hash_id) public view returns (uint totalValue) {
         totalValue = 0;
         for (uint i=0; i < getPaymentsCount(_hash_id); i++) {
-            totalValue += loans[_hash_id].payments[i].amount;
+            totalValue = totalValue.add(loans[_hash_id].payments[i].amount);
         }
     }
 
@@ -271,7 +275,7 @@ contract JoosCollateralLoanManager is Ownable {
     }
 
     function calculateLoanAmountToPay(bytes16 _hash_id) public view returns(uint) {
-        return (loans[_hash_id].amount * (100 * PERCENT_PRECISION + loans[_hash_id].fee) / (100 * PERCENT_PRECISION));
+        return (loans[_hash_id].amount.mul((100 * PERCENT_PRECISION).add(loans[_hash_id].fee)).div(100 * PERCENT_PRECISION));
     }
 
 }
